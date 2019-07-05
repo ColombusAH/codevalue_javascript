@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>form validation</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+
+  <body>
+    <div class="main_container--flex">
+      <div class="main_container__div--fillform">
+        <form>
+          <h2>Fill it!</h2>
+          <section>
+            <label for="name">Name: </label>
+            <input type="text" id="name" placeholder="e.g: avner" />
+          </section>
+          <section>
+            <label for="address">Address: </label>
+            <input type="text" id="address" placeholder="e.g: Lavon" />
+          </section>
+          <div class="form__div--btnWrapper">
+            <button id="submit_button" type="submit">submit</button>
+          </div>
+        </form>
+        <ul>
+          <li class="li--error li--display" id="name__error">
+            Name should be more than 5 characters long
+          </li>
+          <li class="li--error li--display" id="address__error">
+            address should be lass than 10 characters
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
