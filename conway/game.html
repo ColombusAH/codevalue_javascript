@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conway</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="main">
+      <h1>Game of life</h1>
+      <canvas id="canvas"></canvas>
+      <div class="main__div--user_panel">
+        <label for="width_input">width</label>
+        <input
+          name="width"
+          type="number"
+          value="1000"
+          step="100"
+          min="200"
+          max="1600"
+          id="width_input"
+          class="input--dimension_input"
+        />
+        <label for="height_input">height</label>
+        <input
+          name="height"
+          type="number"
+          value="600"
+          step="100"
+          min="200"
+          max="1000"
+          id="height_input"
+          class="input--dimension_input"
+        />
+          <label for="random">random?</label>
+          <input type="checkbox" id="random"></input>
+        <h3>Click inside the rectangle and press start!</h3>
+        <h4>(You can also click during the game to make a cell alive!)</h4>
+      </div>
+      <div>
+        <button id="start_button"><h2>Start!</h2></button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
