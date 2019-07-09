@@ -4,6 +4,7 @@ const width_input = document.querySelector("#width_input");
 const height_input = document.querySelector("#height_input");
 const start_button = document.querySelector("#start_button");
 const random_check = document.querySelector("#random");
+let global_interval_id = -1;
 //constants
 const cell_radius = 5;
 const diamter = 2 * cell_radius;
@@ -33,7 +34,7 @@ window.onload = init();
 
 // event listener to start the game.
 start_button.addEventListener("click", () => {
-  startGame();
+  global_interval_id = startGame();
 });
 
 //listen to width change.
@@ -51,6 +52,9 @@ height_input.onchange = event => {
 random_check.onchange = () => {
   const is_checked = random_check.checked;
   random_option = is_checked;
+  if (global_interval_id !== -1) {
+    clearInterval(global_interval_id);
+  }
   init();
 };
 
@@ -214,4 +218,5 @@ function startGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawAllCell();
   }, 70);
+  return fill_interval_id;
 }
