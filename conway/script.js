@@ -12,7 +12,7 @@ const width = 1000;
 const height = 600;
 const number_cells_inline = width / diamter; // must be integer (without .)
 const number_of_lines = height / diamter;
-const cells_data_matrix = [];
+let cells_data_matrix;
 let random_option = false;
 // set dimension
 canvas.width = width;
@@ -27,6 +27,7 @@ canvas.addEventListener("click", event => {
   };
   const index = getIndexOfCell(mouse_position);
   cells_data_matrix[index.i][index.j].alive = true;
+  console.log(getNumberOfAliveNeighbors(index.i, index.j));
   drawCell(cells_data_matrix[index.i][index.j]);
 });
 
@@ -34,7 +35,13 @@ window.onload = init();
 
 // event listener to start the game.
 start_button.addEventListener("click", () => {
-  global_interval_id = startGame();
+  if (start_button.textContent === "Start!") {
+    global_interval_id = startGame();
+    start_button.textContent = "Pause";
+  } else {
+    clearInterval(global_interval_id);
+    start_button.textContent = "Start!";
+  }
 });
 
 //listen to width change.
@@ -74,10 +81,13 @@ function drawCell(cell) {
 
 // function that draw all the cell.
 const drawAllCell = () => {
+  let cells = JSON.stringify(cells_data_matrix);
+  cells = JSON.parse(cells);
+
   for (let i = 0; i < cells_data_matrix.length; i++) {
     for (let j = 0; j < cells_data_matrix[i].length; j++) {
-      const cell = cells_data_matrix[i][j];
-      cells_data_matrix[i][j].alive = getVitalityOfCell(cell, i, j);
+      const cell = cells[i][j];
+      cells_data_matrix[i][j].alive = getVitalityOfCell(cells, cell, i, j);
       if (cell.alive) {
         drawCell(cell);
       }
@@ -104,7 +114,7 @@ const getIndexOfCell = mouse_position => {
     function that return how much alive neighbors a certain cell have.
     params : i,j : indexes of the cell in the global cell_data_matrix
 */
-const getNumberOfAliveNeighbors = (i, j) => {
+const getNumberOfAliveNeighbors = (cells, i, j) => {
   let neighbors_indexes = [];
   let number_of_alive_cells = 0;
   neighbors_indexes.push({
@@ -157,7 +167,7 @@ const getNumberOfAliveNeighbors = (i, j) => {
 
   for (let index = 0; index < neighbors_indexes.length; index++) {
     const cell_position = neighbors_indexes[index];
-    const cell = cells_data_matrix[cell_position.i][cell_position.j];
+    const cell = cells[cell_position.i][cell_position.j];
     if (cell.alive === true) {
       number_of_alive_cells++;
     }
@@ -170,13 +180,17 @@ const getNumberOfAliveNeighbors = (i, j) => {
     params: cell: the cell to check
             i, j: the position of the cell in the globl cell_data_matrix 
 */
-const getVitalityOfCell = (cell, i, j) => {
-  const num_of_neighbors = getNumberOfAliveNeighbors(i, j);
+const getVitalityOfCell = (cells, cell, i, j) => {
+  const num_of_neighbors = getNumberOfAliveNeighbors(cells, i, j);
   let is_alive = cell.alive;
-  if (is_alive === true && (num_of_neighbors < 2 || num_of_neighbors > 3)) {
+  if (is_alive && num_of_neighbors < 2) {
     return false;
+  } else if (is_alive && num_of_neighbors > 3) {
+    return false;
+  } else if ((is_alive && num_of_neighbors === 2) || num_of_neighbors === 3) {
+    return true;
   }
-  if (is_alive === false && num_of_neighbors === 3) {
+  if (!is_alive && num_of_neighbors === 3) {
     return true;
   }
   return is_alive;
@@ -186,9 +200,10 @@ const getVitalityOfCell = (cell, i, j) => {
 function init() {
   let y;
   let x;
+  cells_data_matrix = new Array();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   for (y = cell_radius; y < canvas.height; y += diamter) {
-    const cell_array = [];
+    const cell_array = new Array();
     for (x = cell_radius; x < canvas.width; x += diamter) {
       const cell_info = {
         x: x,
@@ -206,6 +221,8 @@ function init() {
     for (x = 0; x < random_number; x++) {
       const i = Math.floor(Math.random() * number_of_lines);
       const j = Math.floor(Math.random() * number_cells_inline);
+      cells_data_matrix[i][j].i = i;
+      cells_data_matrix[i][j].j = j;
       cells_data_matrix[i][j].alive = true;
       drawCell(cells_data_matrix[i][j]);
     }
@@ -217,6 +234,6 @@ function startGame() {
   const fill_interval_id = window.setInterval(() => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawAllCell();
-  }, 70);
+  }, 1000);
   return fill_interval_id;
 }
